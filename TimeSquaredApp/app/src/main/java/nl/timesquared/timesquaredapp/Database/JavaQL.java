@@ -26,32 +26,13 @@ public class JavaQL extends AsyncTask<String, String, String> {
 
     private void ServerConnection()
     {
-        String hostName = "server=timesquared.database.windows.net";
+        String hostName = "timesquared.database.windows.net:1433";
         String dbName = "timesquared_db";
-        String user = "endUser";
-        String password = "CaJoKeMaVi*112358";
-        String url = String.format("jdbc:sqlserver://%s:1433;database=%s;user=%s;password=%s;encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password);
-        String url2 =String.format("jdbc:sqlserver://timesquared.database.windows.net:1433;database=timesquared_db;user=%s;password={%s};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", user, password) ;
+        String user = "teamZeta";
+        String password = "SuperVincent@";
+        String url =String.format("jdbc:jtds:sqlserver://%s;database=%s;user=%s;password=%s;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password) ;
         try {
-            connection = DriverManager.getConnection(url2);
-/*
-            // Create and execute a SELECT SQL statement.
-            String selectSql = "SELECT TOP 20 pc.Name as CategoryName, p.name as ProductName "
-                    + "FROM [SalesLT].[ProductCategory] pc "
-                    + "JOIN [SalesLT].[Product] p ON pc.productcategoryid = p.productcategoryid";
-
-            try (Statement statement = connection.createStatement();
-                 ResultSet resultSet = statement.executeQuery(selectSql)) {
-
-                // Print results from select statement
-                System.out.println("Top 20 categories:");
-                while (resultSet.next())
-                {
-                    System.out.println(resultSet.getString(1) + " "
-                            + resultSet.getString(2));
-                }
-                connection.close();
-            }*/
+            connection = DriverManager.getConnection(url);
         }
         catch (Exception e) {
             e.printStackTrace();
