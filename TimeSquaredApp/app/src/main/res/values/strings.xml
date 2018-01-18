@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TimeSquaredApp</string>
-    <string name="button1">Button1</string>
+    <string name="TestConnection">Test Connection</string>
+    <string name="title_activity_activities">Activities</string>
 </resources>

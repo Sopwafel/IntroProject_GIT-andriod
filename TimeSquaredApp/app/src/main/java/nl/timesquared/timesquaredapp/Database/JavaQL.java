@@ -33,6 +33,8 @@ public class JavaQL extends AsyncTask<String, String, String> {
         String url =String.format("jdbc:jtds:sqlserver://%s;database=%s;user=%s;password=%s;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password) ;
         try {
             connection = DriverManager.getConnection(url);
+            Log.d("click", "We push button");
+
         }
         catch (Exception e) {
             e.printStackTrace();
