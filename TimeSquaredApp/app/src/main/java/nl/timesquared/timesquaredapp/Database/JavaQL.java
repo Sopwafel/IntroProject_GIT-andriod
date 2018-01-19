@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.DriverManager;
+import com.microsoft.sqlserver.jdbc.*;
 
 
 
@@ -38,6 +39,9 @@ public class JavaQL extends AsyncTask<String, String, String> {
         }
         catch (Exception e) {
             e.printStackTrace();
+        }
+        finally{
+            if(connection != null) try {connection.close();} catch (Exception e){}
         }
     }
 }

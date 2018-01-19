@@ -1,5 +1,8 @@
 package nl.timesquared.timesquaredapp.Objects;
 
+import android.content.Context;
+import android.widget.Button;
+
 import org.w3c.dom.NameList;
 
 import java.util.UUID;
@@ -28,4 +31,5 @@ public abstract class NamedEntry extends Entry{
         this.name= Name;
         this.order = order;
     }
+
 }
