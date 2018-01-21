@@ -8,10 +8,12 @@ import java.util.List;
  */
 
 public class getProjects extends JavaQL {
-    protected List<Object> doInBackground(String... params)
+    ArrayList<Object> returnlist = new ArrayList<>();
+    protected List<Object> doInBackground(Void... params)
     {
         ArrayList<Object> output = new ArrayList<>();
         ServerConnection();
-        return output;
+        return null;
     }
+
 }

@@ -19,9 +19,17 @@ import java.util.List;
  * Created by Sopwafel on 16-1-2018.
  */
 
-public abstract class JavaQL extends AsyncTask<String, String, List<Object>> {
+public abstract class JavaQL extends AsyncTask<Void, Void, List<Object>> {
+    // The AsyncTask<types> makes it so this class can be executed in the background. Google for more information. Non-abstract subclasses of this need to implement doInBackground(List<Object>)
+    // https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html should be a complete guide.
+    // My idea is that this class contains everything we need to fetch the things we need: projects, their activityLinks, and from that their activities.
+    // Then we make subclasses of which the doInBackGround does something in the background TODO: figure out how to get the list back in the main thread
+    // I don't know Kees' classes and frameworks very well but this seemed like a good way to implement it in Java.
+    // I'll put more comments near key pieces of code that took me some time to figure out
 
+    // This is the connection to the server
     Connection connection = null;
+    // We generate a statement for it, in which we can put a query to execute. See further ahead
     Statement stmt;
 
     /**
@@ -35,7 +43,7 @@ public abstract class JavaQL extends AsyncTask<String, String, List<Object>> {
         String password = "SuperVincent@";
         String url =String.format("jdbc:jtds:sqlserver://%s;database=%s;user=%s;password=%s;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password) ;
         try {
-            Connection connection = DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(url);
             Log.d("click", "We push button");
         }
         catch (Exception e) {
@@ -47,7 +55,7 @@ public abstract class JavaQL extends AsyncTask<String, String, List<Object>> {
     }
 
     /**
-     * Puts datain in kolommen in Tabelnaam in the server
+     * Puts datain in kolommen in Tabelnaam in the server. Overgenomen van Kees
      * @param Tabelnaam
      * @param kolommen
      * @param datain
@@ -96,7 +104,7 @@ public abstract class JavaQL extends AsyncTask<String, String, List<Object>> {
     }
 
     /**
-     * Helper function for insert
+     * Helper function for insert. Overgenomen van Kees
      * Does something that is neccesary to a string
      * @param input
      * @return
@@ -116,11 +124,19 @@ public abstract class JavaQL extends AsyncTask<String, String, List<Object>> {
         return "null";
     }
 
+    /**
+     * I don't really know what this does...
+     * Stil it contains useful code, look at comments
+     * TODO: dit afmaken
+     * @param querry
+     */
     public void querryExecuter(String querry)
     {
         ServerConnection();
         try{
+            // So this is how you execute a query. You make a statement with the connection we made before.
             stmt = connection.createStatement();
+            // Then we can execute this statement with a string query and we get a ResultSet object. Haven't worked past this.
             ResultSet rs = stmt.executeQuery(querry);
 
         }
@@ -132,6 +148,7 @@ public abstract class JavaQL extends AsyncTask<String, String, List<Object>> {
 
     /**
      * Requests things from the database and returns them in a list
+     * TODO: dit afmaken
      * @param wat
      * @param tabel
      * @param tabellen_voorwaarden
@@ -151,7 +168,7 @@ public abstract class JavaQL extends AsyncTask<String, String, List<Object>> {
             //Then we execute a query from a string with the line below
             ResultSet rs = stmt.executeQuery(selectstring);
             while(rs.next()){
-
+                //TODO Evaluate string and put it in objects
             }
         }
         catch (Exception e){}
@@ -159,7 +176,7 @@ public abstract class JavaQL extends AsyncTask<String, String, List<Object>> {
     }
 
     /**
-     * Makes a string that can be executed
+     * Makes a string that can be executed. Overgenomen van Kees
      * @param SelectOfDelete
      * @param tabel
      * @param kolommen_voorwaarden
@@ -197,7 +214,7 @@ public abstract class JavaQL extends AsyncTask<String, String, List<Object>> {
     }
 
     /**
-     * Casts all items in a list to a different type
+     * Helper method that casts all items in a list to a different type
      * @param srcList List
      * @param clas Class
      * @param <T> Type
