@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,20 +20,11 @@ public class ProjectObject extends NamedEntry{
     public Boolean getActive(){
         return Active;
     }
-    public List<ActivityObject> activityList;
+    public List<ActivityObject> activityList = new ArrayList<ActivityObject>();
+
     public ProjectObject(UUID ID, String name, int color, int order)
     {
         super(ID, name, color, order);
         Active = true;
-    }
-
-    @Override
-    public Button makeButton(Context context) {
-        Button button = super.makeButton(context);
-        button.setOnClickListener(onClick());
-        });
-    }
-    public void onClick(View view) {
-        ActivitiesActivity activityView = new ActivitiesActivity(this);
     }
 }

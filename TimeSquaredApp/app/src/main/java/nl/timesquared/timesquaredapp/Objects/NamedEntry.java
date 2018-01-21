@@ -5,13 +5,14 @@ import android.widget.Button;
 
 import org.w3c.dom.NameList;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Sopwafel on 18-1-2018.
  */
 
-public abstract class NamedEntry extends Entry{
+public abstract class NamedEntry extends Entry implements Serializable {
     public int order;
     private UUID ID;
     public UUID getID(){
