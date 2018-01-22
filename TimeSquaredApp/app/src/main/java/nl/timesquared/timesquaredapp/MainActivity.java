@@ -38,8 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
         // This makes sure the UserID is accessible
         localPrefs = this.getPreferences(Context.MODE_PRIVATE);
+        setUserID("b4e36b26-a1eb-4a11-861d-f7a1374be831");
+       // setUserID("d2c1b357-8041-4aef-9b41-da49db7a2aa6");
+
         savedUID = localPrefs.getString("USER_ID", "unknown");
-        setUserID("d2c1b357-8041-4aef-9b41-da49db7a2aa6");
     }
 //    protected void putToolbar()
 //    {
@@ -61,18 +63,18 @@ public class MainActivity extends AppCompatActivity {
      */
     public void testclick(android.view.View a)
     {
-        ProjectObject test1 = new  ProjectObject(UUID.randomUUID(), "test",1,1);
-        test1.activityList.add(new ActivityObject(UUID.randomUUID(), "UserID: "+savedUID, 1, 1));
-        test1.activityList.add(new ActivityObject(UUID.randomUUID(), "Dildo's gooien", 1, 1));
-        test1.activityList.add(new ActivityObject(UUID.randomUUID(), "Dildo's vreten", 1, 1));
+        ProjectObject test1 = new  ProjectObject("akfdj", "test",1);
+        test1.activityList.add(new ActivityObject("", "UserID: "+savedUID, 1));
+        test1.activityList.add(new ActivityObject("", "Dildo's gooien", 1));
+        test1.activityList.add(new ActivityObject(" ", "Dildo's vreten", 1));
 
 
         testList.add(test1);
-        testList.add(new ProjectObject(UUID.randomUUID(), "dildoi2",1,2));
-        testList.add(new ProjectObject(UUID.randomUUID(), "dildo4i",1,3));
+        testList.add(new ProjectObject("aaaa", "dildoi2",1));
+        testList.add(new ProjectObject("dkdkdk", "dildo4i",1));
         // TODO: fetch projects from database
         // The line below is how you execute an AsyncTask. But I don't know yet how to then access it here as the results are in a different thread
-         new getProjects().execute();
+         new getProjects().execute(savedUID);
 
         //new JavaQL().execute();
     }

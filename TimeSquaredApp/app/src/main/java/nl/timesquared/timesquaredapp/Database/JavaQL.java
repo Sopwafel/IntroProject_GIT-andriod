@@ -1,5 +1,6 @@
 package nl.timesquared.timesquaredapp.Database;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 
 import java.io.Serializable;
@@ -14,12 +15,14 @@ import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.timesquared.timesquaredapp.Objects.ProjectObject;
+
 
 /**
  * Created by Sopwafel on 16-1-2018.
  */
 
-public abstract class JavaQL extends AsyncTask<Void, Void, List<Object>> {
+public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
     // The AsyncTask<types> makes it so this class can be executed in the background. Google for more information. Non-abstract subclasses of this need to implement doInBackground(List<Object>)
     // https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html should be a complete guide.
     // My idea is that this class contains everything we need to fetch the things we need: projects, their activityLinks, and from that their activities.
@@ -156,7 +159,7 @@ public abstract class JavaQL extends AsyncTask<Void, Void, List<Object>> {
      * @param objecttype
      * @return
      */
-    public List<Object> Select(String[] wat, String tabel, String[] tabellen_voorwaarden, String[] voorwaarden, String objecttype){
+    public ArrayList<Object> Select(String[] wat, String tabel, String[] tabellen_voorwaarden, String[] voorwaarden, String objecttype){
         String selectstring = SelectStringMaker("SELECT *", tabel, tabellen_voorwaarden, voorwaarden);
         ArrayList<Object> output = new ArrayList<Object>();
         ServerConnection();
@@ -167,8 +170,24 @@ public abstract class JavaQL extends AsyncTask<Void, Void, List<Object>> {
             //Then we make an (empty) statement
             //Then we execute a query from a string with the line below
             ResultSet rs = stmt.executeQuery(selectstring);
-            while(rs.next()){
-                //TODO Evaluate string and put it in objects
+            while (rs.next()) {
+                switch (objecttype) {
+                    case "project":
+                        ProjectObject project = new ProjectObject(rs.getString(0), rs.getString(1), Color.parseColor(rs.getString(2)));
+                        output.add(project);
+                        Log.d("SwitchCase", "project");
+
+                        break;
+                    default:
+                        Log.d("SwitchCase", "defaault");
+                        break;
+
+
+                }
+
+                while (rs.next()) {
+
+                }
             }
         }
         catch (Exception e){}

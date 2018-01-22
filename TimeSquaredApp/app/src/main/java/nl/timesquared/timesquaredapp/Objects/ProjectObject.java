@@ -22,9 +22,9 @@ public class ProjectObject extends NamedEntry{
     }
     public List<ActivityObject> activityList = new ArrayList<ActivityObject>();
 
-    public ProjectObject(UUID ID, String name, int color, int order)
+    public ProjectObject(String ID, String name, int color)
     {
-        super(ID, name, color, order);
+        super(ID, name, color);
         Active = true;
     }
 }

@@ -13,9 +13,8 @@ import java.util.UUID;
  */
 
 public abstract class NamedEntry extends Entry implements Serializable {
-    public int order;
-    private UUID ID;
-    public UUID getID(){
+    private String ID;
+    public String getID(){
         return ID;
     }
     private String name;
@@ -25,12 +24,11 @@ public abstract class NamedEntry extends Entry implements Serializable {
     public String toString(){
         return name;
     }
-    public NamedEntry(UUID ID, String Name, int color, int order)
+    public NamedEntry(String ID, String Name, int color)
     {
         super(color);
         this.ID=ID;
         this.name= Name;
-        this.order = order;
     }
 
 }

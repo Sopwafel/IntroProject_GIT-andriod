@@ -26,7 +26,7 @@ public class ObjectFactory {
     }
 
     public static Object Project_Object(ArrayList<String> DB_entry){
-        ProjectObject projectje = new ProjectObject(UUID.fromString(DB_entry.get(0)), DB_entry.get(1), Integer.parseInt(DB_entry.get(2)), 1);
+        ProjectObject projectje = new ProjectObject(DB_entry.get(0), DB_entry.get(1), Integer.parseInt(DB_entry.get(2)));
         return projectje;
     }
 }

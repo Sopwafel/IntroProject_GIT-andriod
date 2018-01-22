@@ -8,7 +8,7 @@ import java.util.UUID;
  */
 
 public class ActivityObject extends NamedEntry  {
-    public ActivityObject(UUID ID, String name, int color, int order){
-        super(ID, name, color, order);
+    public ActivityObject(String ID, String name, int color){
+        super(ID, name, color);
     }
 }
