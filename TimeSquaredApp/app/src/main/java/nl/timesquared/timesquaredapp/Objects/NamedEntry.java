@@ -12,7 +12,7 @@ import java.util.UUID;
  * Created by Sopwafel on 18-1-2018.
  */
 
-public abstract class NamedEntry extends Entry implements Serializable {
+public abstract class NamedEntry extends Entry {
     private String ID;
     public String getID(){
         return ID;

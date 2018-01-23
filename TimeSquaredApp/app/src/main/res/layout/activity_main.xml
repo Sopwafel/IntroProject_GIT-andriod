@@ -16,10 +16,10 @@
         <!--android:elevation="4dp"-->
         <!--android:theme="@style/ThemeOverlay.AppCompat.ActionBar"-->
         <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>-->
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/TestConnection"
-        android:onClick="testclick"/>
+    <!--<Button-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="@string/TestConnection"-->
+        <!--android:onClick="testclick"/>-->
 </LinearLayout>

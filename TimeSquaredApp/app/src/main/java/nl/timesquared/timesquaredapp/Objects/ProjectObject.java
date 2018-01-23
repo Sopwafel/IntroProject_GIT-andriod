@@ -21,10 +21,27 @@ public class ProjectObject extends NamedEntry{
         return Active;
     }
     public List<ActivityObject> activityList = new ArrayList<ActivityObject>();
-
+    public List<ActivityLink> linkList = new ArrayList<ActivityLink>();
     public ProjectObject(String ID, String name, int color)
     {
         super(ID, name, color);
         Active = true;
+    }
+
+    /**
+     * Finds the ActivityLink between the project and an ActivityObject
+     * @param activityToFindLinkOf
+     * @return ActivityLink
+     */
+    public ActivityLink getActivityLink(ActivityObject activityToFindLinkOf)
+    {
+        ActivityLink output;
+        for(int i = 0;i<linkList.size();i++)
+        {
+            output = linkList.get(i);
+            if(activityToFindLinkOf.getID().equals(output.getActivityID()))
+                return output;
+        }
+        return null;
     }
 }

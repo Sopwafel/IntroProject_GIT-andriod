@@ -2,11 +2,13 @@ package nl.timesquared.timesquaredapp.Objects;
 
 import android.graphics.Color;
 
+import java.io.Serializable;
+
 /**
  * Created by Sopwafel on 18-1-2018.
  */
 
-public abstract class Entry {
+public abstract class Entry implements Serializable {
     public int color = Color.WHITE;
     public Entry(int color)
     {

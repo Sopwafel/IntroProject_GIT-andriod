@@ -247,4 +247,26 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
         }
         return list;
     }
+
+    /**
+     * Updates an entry in the server
+     * @param tabel
+     * @param aan_te_passen_kolom
+     * @param nieuwe_waarde
+     * @param kolom_voorwaarde
+     * @param waarde_voorwaarde
+     */
+    public void update(String tabel, String aan_te_passen_kolom, String nieuwe_waarde, String kolom_voorwaarde, String waarde_voorwaarde)
+    {
+        String updatestring = "UPDATE " + tabel + " SET ";
+        updatestring += aan_te_passen_kolom + " =";
+
+        updatestring += IntOrString(nieuwe_waarde);
+        updatestring += " WHERE " + kolom_voorwaarde + "=";
+
+        updatestring += IntOrString(waarde_voorwaarde);
+
+        updatestring += ";";
+        querryExecuter(updatestring);
+    }
 }

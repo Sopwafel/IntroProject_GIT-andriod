@@ -7,21 +7,22 @@ import java.util.UUID;
  */
 
 public class ActivityLink extends Entry {
-    private UUID ProjectID;
-    public UUID getProjectID()
+    private String ProjectID;
+    public String getProjectID()
     {
         return ProjectID;
     }
-    private UUID ActivityID;
-    public UUID getActivityID()
+    private String ActivityID;
+    public String getActivityID()
     {
         return ActivityID;
     }
     public Boolean Actief;
-    public ActivityLink(UUID projectID, UUID activityID, Boolean actief)
+    public ActivityLink(String projectID, String activityID, Boolean actief)
     {
         ProjectID=projectID;
         ActivityID=activityID;
         Actief=actief;
     }
+
 }
