@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <item android:id="@+id/loginbutton"
-    android:title="Change user ID"
+    android:title="Set ID"
     app:showAsAction="never"
-    android:onClick=""/>
+    />
 </menu>

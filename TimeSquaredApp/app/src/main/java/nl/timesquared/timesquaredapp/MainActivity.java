@@ -17,11 +17,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -45,6 +47,21 @@ public class MainActivity extends AppCompatActivity {
        // setUserID("d2c1b357-8041-4aef-9b41-da49db7a2aa6");
         savedUID = localPrefs.getString("USER_ID", "unknown");
         addTestProjects();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.loginbutton, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.loginbutton) {
+            askUserID();
+        }
+        return super.onOptionsItemSelected(item);
     }
 //    protected void putToolbar()
 //    {
@@ -117,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
     {
         LinearLayout projectHolder = (LinearLayout)findViewById(R.id.projectHolder);
         projectHolder.removeAllViews();
+        TextView text = new TextView(this);
+        text.setText("Select a project");
+        projectHolder.addView(text);
         Button button;
         if(!savedUID.equals("unknown")) {
             Log.d("userid: ", savedUID);
@@ -154,17 +174,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Shows a dialog that asks for userID and saves it.
+     */
     private void askUserID(){
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("UserID");
         // Set up the input
+        builder.setMessage("Please enter the ID you use on the desktop app:");
         final EditText input = new EditText(MainActivity.this);
         // Specify the type of input expected
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
         // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Confirm ID", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 setUserID(input.getText().toString());
@@ -177,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
-
         builder.show();
     }
 
