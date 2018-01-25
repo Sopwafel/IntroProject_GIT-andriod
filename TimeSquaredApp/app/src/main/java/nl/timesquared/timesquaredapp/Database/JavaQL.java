@@ -44,17 +44,19 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
         String dbName = "timesquared_db";
         String user = "teamZeta";
         String password = "SuperVincent@";
-        String url =String.format("jdbc:jtds:sqlserver://%s;database=%s;user=%s;password=%s;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password) ;
+        String url =String.format("jdbc:jtds:sqlserver://%s;databaseName=%s;user=%s;password=%s;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password) ;
         try {
             connection = DriverManager.getConnection(url);
-            Log.d("click", "We push button");
+            Log.d("Connection", "Connection made");
+            Log.d("Connection", "Connection String: "+ url);
+
         }
         catch (Exception e) {
-            e.printStackTrace();
+            Log.d("ServerConnection", e.getMessage());
         }
-        finally{
-            if(connection != null) try {connection.close(); Log.d("connection","connection null: closing connection");} catch (Exception e){}
-        }
+//        finally{
+//            if(connection != null) try {connection.close(); Log.d("connection","connection null: closing connection");} catch (Exception e){}
+//        }
     }
 
     /**
@@ -149,6 +151,17 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
         }
     }
 
+    private void setSessionContext(Connection conn, String UID){
+        try{
+            stmt = conn.createStatement();
+            stmt.executeUpdate(String.format("sp_set_session_context 'user_id', '{0}';", UID));
+            Log.d("setSessionContext", "Session context succesfully set");
+        }
+        catch (Exception e){
+            Log.d("SetSessionContext", "failed");
+        }
+    }
+
     /**
      * Requests things from the database and returns them in a list
      * TODO: dit afmaken
@@ -169,31 +182,30 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
             //We make a connection
             //Then we make an (empty) statement
             //Then we execute a query from a string with the line below
+            Log.d("Select", "selectString: " +selectstring);
+            setSessionContext(connection, voorwaarden[0]);
             ResultSet rs = stmt.executeQuery(selectstring);
+            Log.d("Select", "ResultSet retrieved. After this follow the names of all retrieved objects");
             while (rs.next()) {
                 switch (objecttype) {
-                    case "project":
-                        ProjectObject project = new ProjectObject(rs.getString(0), rs.getString(1), Color.parseColor(rs.getString(2)));
+                    case "ProjectObject":
+                        ProjectObject project = new ProjectObject(rs.getString(1), rs.getString(2), Color.parseColor(rs.getString(3)));
                         output.add(project);
                         Log.d("SwitchCase", "project");
 
                         break;
                     default:
-                        Log.d("SwitchCase", "defaault");
+                        Log.d("SwitchCase", "default");
                         break;
-
-
-                }
-
-                while (rs.next()) {
-
                 }
             }
         }
-        catch (Exception e){}
+        catch (Exception e){
+            Log.d("Select EXCEPTION",e.getMessage());
+        }
         return output;
     }
-
+    
     /**
      * Makes a string that can be executed. Overgenomen van Kees
      * @param SelectOfDelete
@@ -232,21 +244,7 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
 
     }
 
-    /**
-     * Helper method that casts all items in a list to a different type
-     * @param srcList List
-     * @param clas Class
-     * @param <T> Type
-     * @return Converted list
-     */
-    public <T>List<T> castCollection(List srcList, Class<T> clas){
-        List<T> list =new ArrayList<T>();
-        for (Object obj : srcList) {
-            if(obj!=null && clas.isAssignableFrom(obj.getClass()))
-                list.add(clas.cast(obj));
-        }
-        return list;
-    }
+
 
     /**
      * Updates an entry in the server

@@ -43,10 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
         // This makes sure the UserID is accessible
         localPrefs = this.getPreferences(Context.MODE_PRIVATE);
-        setUserID("b4e36b26-a1eb-4a11-861d-f7a1374be831");
        // setUserID("d2c1b357-8041-4aef-9b41-da49db7a2aa6");
         savedUID = localPrefs.getString("USER_ID", "unknown");
-        addTestProjects();
+        addProjects();
     }
 
     @Override
@@ -75,6 +74,22 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("USER_ID", ID);
         editor.apply();
         savedUID = localPrefs.getString("USER_ID", "unknown");
+    }
+
+    private void addProjects(){
+        new getProjects().execute(savedUID);
+        try{
+            List<Object> tempList = new getProjects().execute(new String[]{savedUID}).get();
+            testList=castCollection(tempList, ProjectObject.class);
+        }
+        catch (Exception e)
+        {
+            Log.d("addProjects", "error emssage in MainActivity.addProjects: "+e.getMessage());
+        }
+        Log.d("testlist[0]", testList.get(0).getName());
+        Log.d("testlist[1]", testList.get(1).getName());
+
+        drawProjects();
     }
 
     /**
@@ -112,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
         drawProjects();
         // TODO: fetch projects from database
         // The line below is how you execute an AsyncTask. But I don't know yet how to then access it here as the results are in a different thread. Also server returns empty results so it's useless for now.
-        // new getProjects().execute(savedUID);
 
         //new JavaQL().execute();
     }
@@ -204,4 +218,19 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Helper method that casts all items in a list to a different type
+     * @param srcList List
+     * @param clas Class
+     * @param <T> Type
+     * @return Converted list
+     */
+    public <T>List<T> castCollection(List srcList, Class<T> clas){
+        List<T> list =new ArrayList<T>();
+        for (Object obj : srcList) {
+            if(obj!=null && clas.isAssignableFrom(obj.getClass()))
+                list.add(clas.cast(obj));
+        }
+        return list;
+    }
 }

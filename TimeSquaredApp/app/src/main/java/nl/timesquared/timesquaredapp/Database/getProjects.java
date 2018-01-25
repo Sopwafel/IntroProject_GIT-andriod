@@ -17,14 +17,12 @@ public class getProjects extends JavaQL {
     {
         String[] wat = { "Project_ID", "Project_Naam", "Project_Kleur", "Volgorde_Nummer", "Project_Actief", "UserID" };
         String UID = params[0];
+        Log.d("uid", UID);
         ArrayList<Object> output = new ArrayList<>();
-        ServerConnection();
+        //ServerConnection();
         output = Select(wat, "Projects",new String[]{"UserID"}, new String[]{UID}, "ProjectObject");
-        Object item = output.get(0);
-        //List<ProjectObject> output2 = castCollection(output, ProjectObject.class);
 
-       // Log.d("output of select", output2.get(0).getName());
-        return null;
+        return output;
     }
 
 }
