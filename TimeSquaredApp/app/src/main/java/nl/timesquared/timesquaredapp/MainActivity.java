@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     -   Figure out how to make a persistent notification. In Android you often have to declare these things in files like android.manifest or some res file.
         For example I had to make all menuItems in the res/menu folder. I will write the method you need to attach to it, as soon as you know where I have to put it.
         Seems a bit odd to put it in an activity and have no idea where else.
-    -   Get the buttons in drawProjects and drawActivities to be the correct color. Right now they have a standard color. Both object types already have their colors loaded from the server when
+    -   Get the buttons in drawProjects and drawActivities to be the correct color. Right now they have a standard color. Both object types already have their colors inside them when
         we call drawProjects or drawActivities. They're saved as integers though, and when I tried button.setBackgroundColor(project.getColor())); they became transparent. Good luck!
      */
 

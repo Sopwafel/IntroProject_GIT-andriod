@@ -22,12 +22,13 @@ public class getProjects extends JavaQL {
         UID = params[0];
         ArrayList<Object> output;
         //ServerConnection();
-        output = Select(wat, "Projects",new String[]{"UserID"}, new String[]{UID}, "ProjectObject");
+        output = Select(wat, "Projects", new String[]{"UserID"}, new String[]{UID}, "ProjectObject");
 
         List<ActivityLink> activityLinks = getActivityLinks();
         List<Activity> activities = getActivities();
         return output;
     }
+
     public  List<ActivityLink> getActivityLinks()
     {
         List<ActivityLink> links = linkSelect(new String[] { "UserID" }, new String[] { UID});
