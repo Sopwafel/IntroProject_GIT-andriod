@@ -5,4 +5,7 @@
     android:title="Set ID"
     app:showAsAction="never"
     />
+    <item android:id="@+id/reloadbutton"
+        android:title="Reload projects"
+        app:showAsAction="never"/>
 </menu>

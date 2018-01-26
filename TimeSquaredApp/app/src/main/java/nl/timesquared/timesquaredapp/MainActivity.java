@@ -13,28 +13,46 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+    /*
+    Uitleg for Casper!
+    Things you can do:
+    -   Figure out how to make a persistent notification. In Android you often have to declare these things in files like android.manifest or some res file.
+        For example I had to make all menuItems in the res/menu folder. I will write the method you need to attach to it, as soon as you know where I have to put it.
+        Seems a bit odd to put it in an activity and have no idea where else.
+    -   Get the buttons in drawProjects and drawActivities to be the correct color. Right now they have a standard color. Both object types already have their colors loaded from the server when
+        we call drawProjects or drawActivities. They're saved as integers though, and when I tried button.setBackgroundColor(project.getColor())); they became transparent. Good luck!
+     */
+
+    /**
+     * List of Projects fetched from the server. Each project contains its  Activities and ActivityLinks
+     */
     List<ProjectObject> testList = new ArrayList<ProjectObject>();
+    /**
+     * UserID for getting things from the server
+     */
     String savedUID;
+    /**
+     * You can save things like settings in here
+     */
     SharedPreferences localPrefs;
     @Override
+    /**
+     * Is called right after construction. You can't give variables to constructors of activities, you do that with Intents
+     */
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -45,15 +63,22 @@ public class MainActivity extends AppCompatActivity {
         localPrefs = this.getPreferences(Context.MODE_PRIVATE);
        // setUserID("d2c1b357-8041-4aef-9b41-da49db7a2aa6");
         savedUID = localPrefs.getString("USER_ID", "unknown");
-        addProjects();
+        getProjects();
+        drawProjects();
     }
 
     @Override
+    /**
+     * Adds menuItems
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.loginbutton, menu);
         return super.onCreateOptionsMenu(menu);
     }
     @Override
+    /**
+     * Adds handlers to menuItems
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -68,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
 //        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
 //        setSupportActionBar(myToolbar);
 //    }
+
+    /**
+     * Saves a UserID in the app settings
+     * @param ID userID
+     */
     public void setUserID(String ID)
     {
         SharedPreferences.Editor editor = localPrefs.edit();
@@ -76,7 +106,10 @@ public class MainActivity extends AppCompatActivity {
         savedUID = localPrefs.getString("USER_ID", "unknown");
     }
 
-    private void addProjects(){
+    /**
+     * Gets projects from the server
+     */
+    private void getProjects(){
         new getProjects().execute(savedUID);
         try{
             List<Object> tempList = new getProjects().execute(new String[]{savedUID}).get();
@@ -84,12 +117,8 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e)
         {
-            Log.d("addProjects", "error emssage in MainActivity.addProjects: "+e.getMessage());
+            Log.d("getProjects", "error emssage in MainActivity.getProjects: "+e.getMessage());
         }
-        Log.d("testlist[0]", testList.get(0).getName());
-        Log.d("testlist[1]", testList.get(1).getName());
-
-        drawProjects();
     }
 
     /**
@@ -97,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
      * Right now the server returns empty resultSets :(
      * And there is small time left
      */
-    public void addTestProjects()
+    private void addTestProjects()
     {
         ProjectObject test1, test2, test3;
         test1= new  ProjectObject("1", "IntroProject",1);
@@ -125,18 +154,16 @@ public class MainActivity extends AppCompatActivity {
         testList.add(test3);
 
         drawProjects();
-        // TODO: fetch projects from database
-        // The line below is how you execute an AsyncTask. But I don't know yet how to then access it here as the results are in a different thread. Also server returns empty results so it's useless for now.
-
-        //new JavaQL().execute();
     }
 
     /**
-     * Makes an intent and starts it
+     * Opens a project's activity page
      */
     public void startActivityIntent(ProjectObject project)
     {
+        // So this intent is like a link between activities. You have to set child activities somewhere else to get a back button
         Intent toStart = new Intent(this, new ActivitiesActivity().getClass());
+        // We can retrieve an extra from the intent in the child activity. That is how you pass data around
         toStart.putExtra("project", project);
         startActivity(toStart);
     }
@@ -146,12 +173,16 @@ public class MainActivity extends AppCompatActivity {
      */
     public void drawProjects()
     {
+        // Getting UI element
         LinearLayout projectHolder = (LinearLayout)findViewById(R.id.projectHolder);
         projectHolder.removeAllViews();
+
         TextView text = new TextView(this);
         text.setText("Select a project");
         projectHolder.addView(text);
+
         Button button;
+        // Only draw the projects if we know an UserID
         if(!savedUID.equals("unknown")) {
             Log.d("userid: ", savedUID);
             for (int i = 0; i < testList.size(); i++) {
@@ -171,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 projectHolder.addView(button);
             }
         }
+        // If we don't know UserID, ask for it
         else
         {
             //All this block does is ask the user to enter their userID

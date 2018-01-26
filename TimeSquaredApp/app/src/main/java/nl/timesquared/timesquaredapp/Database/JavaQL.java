@@ -1,5 +1,6 @@
 package nl.timesquared.timesquaredapp.Database;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.AsyncTask;
 
@@ -15,6 +16,8 @@ import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.timesquared.timesquaredapp.Objects.ActivityLink;
+import nl.timesquared.timesquaredapp.Objects.ActivityObject;
 import nl.timesquared.timesquaredapp.Objects.ProjectObject;
 
 
@@ -185,7 +188,6 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
             Log.d("Select", "selectString: " +selectstring);
             setSessionContext(connection, voorwaarden[0]);
             ResultSet rs = stmt.executeQuery(selectstring);
-            Log.d("Select", "ResultSet retrieved. After this follow the names of all retrieved objects");
             while (rs.next()) {
                 switch (objecttype) {
                     case "ProjectObject":
@@ -193,6 +195,21 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
                         output.add(project);
                         Log.d("SwitchCase", "project");
 
+                        break;
+                    case "Activity_link":
+                        //ActivityLink link = new ActivityLink(rs.getString())
+                        ActivityLink link = new ActivityLink(rs.getString(1), rs.getString(2), Boolean.parseBoolean(rs.getString(3)));
+                        output.add(link);
+                        Log.d("activityLink", "String 1:"+rs.getString(1));
+                        Log.d("activityLink", "String 2:"+rs.getString(2));
+                        Log.d("activityLink", "String 3:"+rs.getString(3));
+                        break;
+                    case "Activity":
+                        ActivityObject activity = new ActivityObject(rs.getString(1), rs.getString(2), Color.parseColor(rs.getString(3)));
+                        output.add(activity);
+                        Log.d("activity", "String 1:"+rs.getString(1));
+                        Log.d("activity", "String 2:"+rs.getString(2));
+                        Log.d("activity", "String 3:"+rs.getString(3));
                         break;
                     default:
                         Log.d("SwitchCase", "default");
@@ -205,7 +222,7 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
         }
         return output;
     }
-    
+
     /**
      * Makes a string that can be executed. Overgenomen van Kees
      * @param SelectOfDelete
@@ -266,5 +283,21 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
 
         updatestring += ";";
         querryExecuter(updatestring);
+    }
+
+    /**
+     * Casts items of a collection to a different type
+     * @param srcList
+     * @param clas
+     * @param <T>
+     * @return
+     */
+    public <T>List<T> castCollection(List srcList, Class<T> clas){
+        List<T> list =new ArrayList<T>();
+        for (Object obj : srcList) {
+            if(obj!=null && clas.isAssignableFrom(obj.getClass()))
+                list.add(clas.cast(obj));
+        }
+        return list;
     }
 }
