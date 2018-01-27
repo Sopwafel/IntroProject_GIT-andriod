@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.timesquared.timesquaredapp.Objects.ActivityLink;
+import nl.timesquared.timesquaredapp.Objects.ActivityObject;
 import nl.timesquared.timesquaredapp.Objects.ProjectObject;
 
 /**
@@ -16,7 +17,7 @@ import nl.timesquared.timesquaredapp.Objects.ProjectObject;
 public class getProjects extends JavaQL {
     ArrayList<Object> returnlist = new ArrayList<>();
     String UID;
-    protected List<Object> doInBackground(String... params)
+    protected List<ProjectObject> doInBackground(String... params)
     {
         String[] wat = { "Project_ID", "Project_Naam", "Project_Kleur", "Volgorde_Nummer", "Project_Actief", "UserID" };
         UID = params[0];
@@ -24,9 +25,33 @@ public class getProjects extends JavaQL {
         //ServerConnection();
         output = Select(wat, "Projects", new String[]{"UserID"}, new String[]{UID}, "ProjectObject");
 
+        List<ProjectObject> projectList = castCollection(output, ProjectObject.class);
+
         List<ActivityLink> activityLinks = getActivityLinks();
-        List<Activity> activities = getActivities();
-        return output;
+        List<ActivityObject> activities = getActivities();
+
+        putLinksInProjects(projectList, activityLinks);
+        putActivitiesInProjects(projectList, activities);
+        return projectList;
+    }
+    public List<ProjectObject> putLinksInProjects(List<ProjectObject> projectlist, List<ActivityLink> linkList)
+    {
+        for(ActivityLink link : linkList){
+            for(ProjectObject project : projectlist)
+                if(link.getProjectID() == project.getID())
+                    project.linkList.add((link));
+        }
+        return projectlist;
+    }
+    public List<ProjectObject> putActivitiesInProjects(List<ProjectObject> projectlist, List<ActivityObject> activityList)
+    {
+        for(ActivityObject activity : activityList){
+            for(ProjectObject project : projectlist)
+                for(ActivityLink link : project.linkList)
+                    if(link.getActivityID()==activity.getID())
+                        project.activityList.add(activity);
+        }
+        return projectlist;
     }
 
     public  List<ActivityLink> getActivityLinks()
@@ -35,17 +60,17 @@ public class getProjects extends JavaQL {
         return links;
     }
 
-    public List<Activity> getActivities(){
-        List<Activity> activities = activitySelect(new String[] { "UserID" }, new String[] { UID});
+    public List<ActivityObject> getActivities(){
+        List<ActivityObject> activities = activitySelect(new String[] { "UserID" }, new String[] { UID});
         return activities;
     }
 
-    public List<Activity> activitySelect(String[] kolommen_voorwaarden, String[] waarden_voorwaarden)
+    public List<ActivityObject> activitySelect(String[] kolommen_voorwaarden, String[] waarden_voorwaarden)
     {
         String[] wat = { "Activiteit_ID", "Activiteit", "kleur", "UserID" };
         Log.d("Select", "We should be fetching all activities now");
         List<Object> objecten = Select(wat, "Activiteiten", kolommen_voorwaarden, waarden_voorwaarden, "Activity");
-        List<Activity> output = castCollection(objecten, Activity.class);
+        List<ActivityObject> output = castCollection(objecten, ActivityObject.class);
         return output;
 
     }

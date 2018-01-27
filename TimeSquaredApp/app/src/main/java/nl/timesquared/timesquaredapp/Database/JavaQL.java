@@ -25,7 +25,7 @@ import nl.timesquared.timesquaredapp.Objects.ProjectObject;
  * Created by Sopwafel on 16-1-2018.
  */
 
-public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
+public abstract class JavaQL extends AsyncTask<String, Void, List<ProjectObject>> {
     // The AsyncTask<types> makes it so this class can be executed in the background. Google for more information. Non-abstract subclasses of this need to implement doInBackground(List<Object>)
     // https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html should be a complete guide.
     // My idea is that this class contains everything we need to fetch the things we need: projects, their activityLinks, and from that their activities.
@@ -200,16 +200,16 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<Object>> {
                         //ActivityLink link = new ActivityLink(rs.getString())
                         ActivityLink link = new ActivityLink(rs.getString(1), rs.getString(2), Boolean.parseBoolean(rs.getString(3)));
                         output.add(link);
-                        Log.d("activityLink", "String 1:"+rs.getString(1));
-                        Log.d("activityLink", "String 2:"+rs.getString(2));
-                        Log.d("activityLink", "String 3:"+rs.getString(3));
+//                        Log.d("activityLink", "String 1:"+rs.getString(1));
+//                        Log.d("activityLink", "String 2:"+rs.getString(2));
+//                        Log.d("activityLink", "String 3:"+rs.getString(3));
                         break;
                     case "Activity":
                         ActivityObject activity = new ActivityObject(rs.getString(1), rs.getString(2), Color.parseColor(rs.getString(3)));
                         output.add(activity);
-                        Log.d("activity", "String 1:"+rs.getString(1));
-                        Log.d("activity", "String 2:"+rs.getString(2));
-                        Log.d("activity", "String 3:"+rs.getString(3));
+//                        Log.d("activity", "String 1:"+rs.getString(1));
+//                        Log.d("activity", "String 2:"+rs.getString(2));
+//                        Log.d("activity", "String 3:"+rs.getString(3));
                         break;
                     default:
                         Log.d("SwitchCase", "default");
