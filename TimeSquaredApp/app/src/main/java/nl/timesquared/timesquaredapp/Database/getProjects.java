@@ -30,41 +30,68 @@ public class getProjects extends JavaQL {
         List<ActivityLink> activityLinks = getActivityLinks();
         List<ActivityObject> activities = getActivities();
 
-        putLinksInProjects(projectList, activityLinks);
-        putActivitiesInProjects(projectList, activities);
+        projectList = putLinksInProjects(projectList, activityLinks);
+        projectList = putActivitiesInProjects(projectList, activities);
         return projectList;
     }
+
+    /**
+     * Puts links in a list in the correct projects.
+     * @param projectlist projects
+     * @param linkList links
+     * @return reconciled projects
+     */
     public List<ProjectObject> putLinksInProjects(List<ProjectObject> projectlist, List<ActivityLink> linkList)
     {
         for(ActivityLink link : linkList){
             for(ProjectObject project : projectlist)
-                if(link.getProjectID() == project.getID())
-                    project.linkList.add((link));
-        }
-        return projectlist;
-    }
-    public List<ProjectObject> putActivitiesInProjects(List<ProjectObject> projectlist, List<ActivityObject> activityList)
-    {
-        for(ActivityObject activity : activityList){
-            for(ProjectObject project : projectlist)
-                for(ActivityLink link : project.linkList)
-                    if(link.getActivityID()==activity.getID())
-                        project.activityList.add(activity);
+                project.putActivityLink(link);
         }
         return projectlist;
     }
 
+    /**
+     * Puts activities in the correct projects. Only works after links have been added
+     * @param projectlist projects
+     * @param activityList links
+     * @return completed projects
+     */
+    public List<ProjectObject> putActivitiesInProjects(List<ProjectObject> projectlist, List<ActivityObject> activityList)
+    {
+        for(ActivityObject activity : activityList){
+            for(ProjectObject project : projectlist)
+                project.putActivity(activity);
+        }
+        return projectlist;
+    }
+
+    /**
+     * Gets all the users links from the server
+     * @return
+     */
     public  List<ActivityLink> getActivityLinks()
     {
         List<ActivityLink> links = linkSelect(new String[] { "UserID" }, new String[] { UID});
         return links;
     }
 
+    /**
+     * Gets all the users activities from the server
+     * @return Activities
+     */
     public List<ActivityObject> getActivities(){
         List<ActivityObject> activities = activitySelect(new String[] { "UserID" }, new String[] { UID});
         return activities;
     }
 
+    /**
+     * Calls Select with the parameters to fetch all Activities from the userID.
+     * Returns a list with all Activities of an User from the server.
+     * getActivities() should be called instead of this.
+     * @param kolommen_voorwaarden
+     * @param waarden_voorwaarden
+     * @return Activities
+     */
     public List<ActivityObject> activitySelect(String[] kolommen_voorwaarden, String[] waarden_voorwaarden)
     {
         String[] wat = { "Activiteit_ID", "Activiteit", "kleur", "UserID" };
@@ -77,10 +104,11 @@ public class getProjects extends JavaQL {
 
     /**
      * Calls Select with the parameters to fetch all ActivityLinks from the userID.
-     * Returns a list with all ActivityLinks of an User from the server
+     * Returns a list with all ActivityLinks of an User from the server.
+     * getActivityLinks() should be called instead of this.
      * @param kolommen_voorwaarden
      * @param waarden_voorwaarden
-     * @return
+     * @return ActivityLinks
      */
     public List<ActivityLink> linkSelect(String[] kolommen_voorwaarden, String[] waarden_voorwaarden)
     {

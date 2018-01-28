@@ -1,6 +1,7 @@
 package nl.timesquared.timesquaredapp.Objects;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -43,5 +44,26 @@ public class ProjectObject extends NamedEntry{
                 return output;
         }
         return null;
+    }
+
+    /**
+     * Check if a link belongs to this project, add it to the linklist if it does
+     * @param aLink link to be checked
+     */
+    public void putActivityLink(ActivityLink aLink){
+        if(aLink.getProjectID().equals(getID()))
+            linkList.add(aLink);
+        else
+            Log.d("putActivity", "Link project ID: " + aLink.getProjectID()+", Project project ID: " +getID());
+    }
+
+    /**
+     * Checks if an activity belongs to this project, add it to the activitylist if it does. Only works after filling linklist
+     * @param activityObject activity to be checked
+     */
+    public void putActivity(ActivityObject activityObject){
+        for(ActivityLink link : linkList)
+            if(link.getActivityID().equals(activityObject.getID()))
+                activityList.add(activityObject);
     }
 }

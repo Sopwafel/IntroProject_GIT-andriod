@@ -73,6 +73,7 @@ public class ActivitiesActivity extends AppCompatActivity {
                                           public void onClick(View view) {
                                               //When a button is clicked, start a timer for its activity
                                               //TODO make it start a timer when that is fixed
+                                              //TODO CAPSER dit is de handler voor als we een timer starten. Hier kan je een notificatie starten.
                                               //timerChange(finalProject.activityList.get(j));
                                           }
                                       }

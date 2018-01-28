@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
     private void getProjects(){
         new getProjects().execute(savedUID);
         try{
-            List<Object> tempList = new getProjects().execute(new String[]{savedUID}).get();
-            testList=castCollection(tempList, ProjectObject.class);
+            testList = new getProjects().execute(new String[]{savedUID}).get();
+
         }
         catch (Exception e)
         {

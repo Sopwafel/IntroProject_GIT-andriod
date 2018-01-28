@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import java.util.List;
 
+import nl.timesquared.timesquaredapp.Objects.ProjectObject;
+
 /**
  * Created by Sopwafel on 23-1-2018.
  */
@@ -26,13 +28,13 @@ public class KnopDB {
         //JavaQL.Insert("Timer_input", kolommen_online, gegevens_online, false);
     }
     public void update_entry(long starttijd, long eindtijd){
-        final String endtijd = Long.toBinaryString(eindtijd);
-        final String bugintijd =   Long.toBinaryString(starttijd);
+        final String finalEindTijd = Long.toBinaryString(eindtijd);
+        final String finalBeginTijd =   Long.toBinaryString(starttijd);
         JavaQL survur = new JavaQL() {
             @Override
-            protected List<Object> doInBackground(String... strings) {
+            protected List<ProjectObject> doInBackground(String... strings) {
                 ServerConnection();
-                update("Timer_input", "EindTijd", endtijd , "Begintijd",bugintijd);
+                update("Timer_input", "EindTijd", finalEindTijd , "Begintijd",finalBeginTijd);
                 return null;
             }
         };
