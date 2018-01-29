@@ -165,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
         Intent toStart = new Intent(this, new ActivitiesActivity().getClass());
         // We can retrieve an extra from the intent in the child activity. That is how you pass data around
         toStart.putExtra("project", project);
+        toStart.putExtra("UID", savedUID);
+
         startActivity(toStart);
     }
 

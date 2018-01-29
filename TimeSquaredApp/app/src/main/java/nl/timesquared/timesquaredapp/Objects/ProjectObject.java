@@ -46,6 +46,17 @@ public class ProjectObject extends NamedEntry{
         return null;
     }
 
+    public ActivityObject getActivity(ActivityLink linkToFindActivityOf){
+        ActivityObject output;
+        for(int i = 0;i<activityList.size();i++)
+        {
+            output = activityList.get(i);
+            if(linkToFindActivityOf.getActivityID().equals(output.getID()))
+                return output;
+        }
+        return null;
+    }
+
     /**
      * Check if a link belongs to this project, add it to the linklist if it does
      * @param aLink link to be checked

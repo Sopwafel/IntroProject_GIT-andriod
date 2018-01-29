@@ -25,7 +25,7 @@ import nl.timesquared.timesquaredapp.Objects.ProjectObject;
 
 public class ActivitiesActivity extends AppCompatActivity {
     ProjectObject project;
-    String lastApp;
+    SharedPreferences localprefs;
     InputEvent timer;
     String savedUID;
     Entry active;
@@ -44,9 +44,33 @@ public class ActivitiesActivity extends AppCompatActivity {
         final Intent passedIntent = getIntent();
         final ProjectObject project = (ProjectObject) passedIntent.getSerializableExtra("project");
         drawActivities(project);
-        SharedPreferences localPrefs = this.getPreferences(Context.MODE_PRIVATE);
+        savedUID = (String)passedIntent.getSerializableExtra("UID");
+        localprefs = this.getPreferences(Context.MODE_PRIVATE);
 
-        savedUID = localPrefs.getString("USER_ID", "unknown");
+    }
+
+    public Boolean isLastLink(ActivityLink a){
+        String toCompare = a.getProjectID()+a.getActivityID();
+        return toCompare.equals(localprefs.getString("lastLink", "unknown"));
+    }
+
+    public void setLastLink(ActivityLink a){
+        SharedPreferences.Editor editor = localprefs.edit();
+        if(a!=null) {
+            editor.putString("lastLink", a.getProjectID() + a.getActivityID());
+        }
+        else{
+            editor.putString("lastLink", "placeholder so islastlink returns false");
+        }
+        editor.apply();
+    }
+
+    public void setStartTime(Long time){
+        SharedPreferences.Editor editor = localprefs.edit();
+
+            editor.putLong("startTime", time);
+
+        editor.apply();
     }
 
     public void drawActivities(ProjectObject project){
@@ -59,14 +83,15 @@ public class ActivitiesActivity extends AppCompatActivity {
         final ProjectObject finalProject = project;
         for(int i = 0;i<project.linkList.size();i++)
         {
-            final int j=i;
+            final ActivityLink finalLink = project.linkList.get(i);
             button = new Button(this);
             Log.d("Color of button", Integer.toString(button.getSolidColor()));
+
             //These colors took me some time to figure out. No nice color type in java
             //TODO make this fetch the activities from the activitylink instead of this ugly cheat, and fix color
             //Log.d("activitycolor", Integer.toString(finalProject.activityList.get(i).color));
             //button.setBackgroundColor(finalProject.activityList.get(i).color);
-            button.setText(finalProject.activityList.get(i).getName());
+            button.setText(finalProject.getName());
             //This is really annoying and should be much easier.
             button.setOnClickListener(new View.OnClickListener() {
                                           @Override
@@ -74,20 +99,33 @@ public class ActivitiesActivity extends AppCompatActivity {
                                               //When a button is clicked, start a timer for its activity
                                               //TODO make it start a timer when that is fixed
                                               //TODO CAPSER dit is de handler voor als we een timer starten. Hier kan je een notificatie starten.
-                                              //timerChange(finalProject.activityList.get(j));
+                                              timerChange(finalLink);
                                           }
                                       }
             );
             activitiesHolder.addView(button);
         }
 
-
     }
-    public void timerChange(ActivityObject activity){
-        lastApp=null;
-        ActivityLink a = project.getActivityLink(activity);
 
+    public void timerChange(ActivityLink link){
+        if(isLastLink(link))
+        {
+            Log.d("timerChange", "isLastLink = true");
+            setLastLink(null);
+            KnopDB knop = new KnopDB(localprefs.getLong("startTime", 0), savedUID, link, false );
+
+        }
+        else{
+            Log.d("timerChange", "isLastLink = false");
+
+            setLastLink(link);
+            long starttime = System.currentTimeMillis();
+            KnopDB knop = new KnopDB(starttime, savedUID, link, true);
+            setStartTime(starttime);
+        }
     }
+
     private void StartNewEvent(ActivityLink a){
         timer = new InputEvent(System.currentTimeMillis(),System.currentTimeMillis(), a.getProjectID(), a.getActivityID());
         //TODO put eventreader

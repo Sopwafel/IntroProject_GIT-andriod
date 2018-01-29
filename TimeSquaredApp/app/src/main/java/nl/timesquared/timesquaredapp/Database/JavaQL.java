@@ -9,6 +9,7 @@ import java.net.URL;
 import android.util.Log;
 import java.sql.Connection;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,8 +46,8 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<ProjectObject>
     {
         String hostName = "timesquared.database.windows.net:1433";
         String dbName = "timesquared_db";
-        String user = "teamZeta";
-        String password = "SuperVincent@";
+        String user = "endUser";
+        String password = "CaJoKeMaVi*112358";
         String url =String.format("jdbc:jtds:sqlserver://%s;databaseName=%s;user=%s;password=%s;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password) ;
         try {
             connection = DriverManager.getConnection(url);
@@ -107,7 +108,7 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<ProjectObject>
         }
 
         insertstring += IntOrString(data[data.length - 1]) + ");";
-
+        Log.d("InsertString: ", insertstring );
         querryExecuter(insertstring);
     }
 
@@ -141,18 +142,40 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<ProjectObject>
     public void querryExecuter(String querry)
     {
         ServerConnection();
-        try{
-            // So this is how you execute a query. You make a statement with the connection we made before.
-            stmt = connection.createStatement();
-            // Then we can execute this statement with a string query and we get a ResultSet object. Haven't worked past this.
-            ResultSet rs = stmt.executeQuery(querry);
 
+        try{
+            stmt = connection.createStatement();
+            if(querry.startsWith("SELECT")) {
+                // So this is how you execute a query. You make a statement with the connection we made before.
+
+                // Then we can execute this statement with a string query and we get a ResultSet object. Haven't worked past this.
+                ResultSet rs = stmt.executeQuery(querry);
+            }
+            else {
+                stmt.executeUpdate(querry);
+            }
         }
         catch (Exception e)
         {
             Log.d("querryExecuter", "failed: " +querry);
+            Log.d("querryExecuter message", e.getMessage());
+            e.printStackTrace();
         }
+        finally {
+            try{
+                connection.close();
+            }
+            catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        Log.d("querryexecuter", querry);
     }
+    /*
+    		insertstring	"INSERT INTO Timer_input (Begintijd, Eindtijd, Project_ID, Activiteit_ID, UserID) VALUES ('5248214323886061409', '5248214324348146820', '5a05efa3-5108-4f1b-8826-e3206f3ea398', 'f9665878-2a70-4e46-90a8-76a1f1d66a32', '017afc4f-2f6d-4793-9b5a-acb96554bd30');"
+D/querryExecuter: failed:    INSERT INTO Timer_input (Begintijd, Eindtijd, Project_ID, Activiteit_ID, UserID) VALUES ('10110000101000010001101100111001000110110', '10110000101000010001101100111001000110110', '2439b5d1-3f6b-4293-add6-e9e4a22f8351', '9e6a8e1b-fa9e-468a-af36-686b38a3537d', '017afc4f-2f6d-4793-9b5a-acb96554bd30');
+
+     */
 
     private void setSessionContext(Connection conn, String UID){
         try{
@@ -277,7 +300,7 @@ public abstract class JavaQL extends AsyncTask<String, Void, List<ProjectObject>
         updatestring += aan_te_passen_kolom + " =";
 
         updatestring += IntOrString(nieuwe_waarde);
-        updatestring += " WHERE " + kolom_voorwaarde + "=";
+        updatestring += " WHERE " + kolom_voorwaarde + " LIKE";
 
         updatestring += IntOrString(waarde_voorwaarde);
 
