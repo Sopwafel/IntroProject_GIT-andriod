@@ -1,5 +1,8 @@
 package nl.timesquared.timesquaredapp;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 
 import nl.timesquared.timesquaredapp.Database.KnopDB;
 import nl.timesquared.timesquaredapp.Objects.ActivityLink;
+import nl.timesquared.timesquaredapp.Objects.ActivityObject;
 import nl.timesquared.timesquaredapp.Objects.ProjectObject;
 
 public class ActivitiesActivity extends AppCompatActivity {
@@ -25,6 +29,7 @@ public class ActivitiesActivity extends AppCompatActivity {
      * UserID for talking to the server
      */
     String savedUID;
+    ProjectObject thisProject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +44,7 @@ public class ActivitiesActivity extends AppCompatActivity {
         final Intent passedIntent = getIntent();
         final ProjectObject project = (ProjectObject) passedIntent.getSerializableExtra("project");
         localprefs = this.getPreferences(Context.MODE_PRIVATE);
-
+        thisProject = project;
         drawActivities(project);
         savedUID = (String)passedIntent.getSerializableExtra("UID");
 
@@ -103,8 +108,9 @@ public class ActivitiesActivity extends AppCompatActivity {
             button.setText(finalProject.getActivity(finalLink).getName());
             //This is really annoying and should be much easier.
             if(isLastTimer(finalLink))
-                //Exception pls go away
+                // Exception pls go away
                 button.setBackgroundColor(Color.RED);
+                // Thank you
             button.setOnClickListener(new View.OnClickListener() {
                                           @Override
                                           public void onClick(View view) {
@@ -135,12 +141,27 @@ public class ActivitiesActivity extends AppCompatActivity {
         }
         else{
             Log.d("timerChange", "isLastTimer = false");
-
+            String activityName = "";
+            for(ActivityObject activityObject : thisProject.activityList) {
+                activityName = activityObject.getName();
+                if (activityObject.getID().equals(link.getActivityID()))
+                    break;
+            }
             setLastLink(link);
             final long starttime = System.currentTimeMillis();
             setStartTime(starttime);
-
             KnopDB knop = new KnopDB(localprefs.getLong("startTime", 0), savedUID, link, true);
+            // This makes, big surprise, a notification while the timer is running
+            Notification.Builder builder = new Notification.Builder(getApplicationContext());
+            builder.setContentTitle("TimeSquared");
+            builder.setContentText("Currently running timer: "+activityName);
+            builder.setOngoing(true);
+            builder.setSmallIcon(R.drawabl);
+            Notification notification = builder.build();    //TODO i was here
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(01, notification);
+            Intent notificationIntent = new Intent(this, MainActivity.class);
         }
     }
     public ActivitiesActivity(){}
