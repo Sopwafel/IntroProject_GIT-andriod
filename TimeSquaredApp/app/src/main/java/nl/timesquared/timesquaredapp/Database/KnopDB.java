@@ -1,10 +1,5 @@
 package nl.timesquared.timesquaredapp.Database;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import java.util.Date;
 import java.util.List;
 
 import nl.timesquared.timesquaredapp.Objects.ActivityLink;
@@ -34,7 +29,6 @@ public  class KnopDB {
      */
     public KnopDB(long starttime, String uid, ActivityLink link, boolean start){
         UID = uid;
-        makeDotNETTime(1);
         if(start)
             startTimer(link, starttime);
         else
@@ -49,7 +43,7 @@ public  class KnopDB {
      */
     private long makeDotNETTime(long input){
         // This method took me over an hour. Super annoying.
-        // After getting epoch millis in c# there still was a difference in the database
+        // After getting epoch millis in c# there still was a difference between C# and Java time in the database.
         // diff is that difference
         long diff = 5248215141696096985l-5233043503742918979l;
         // We got the number below from c#

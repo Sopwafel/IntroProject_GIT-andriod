@@ -1,8 +1,5 @@
 package nl.timesquared.timesquaredapp.Objects;
 
-import java.io.Serializable;
-import java.util.UUID;
-
 /**
  * Created by Sopwafel on 18-1-2018.
  * An activity. See ProjectObject

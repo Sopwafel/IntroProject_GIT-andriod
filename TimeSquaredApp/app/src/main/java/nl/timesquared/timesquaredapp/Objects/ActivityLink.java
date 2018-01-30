@@ -1,7 +1,5 @@
 package nl.timesquared.timesquaredapp.Objects;
 
-import java.util.UUID;
-
 /**
  * Created by V.A. van den Broek on 19/01/2018.
  */

@@ -1,22 +1,14 @@
 package nl.timesquared.timesquaredapp;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-
-import nl.timesquared.timesquaredapp.Database.getProjects;
-import nl.timesquared.timesquaredapp.Objects.ActivityLink;
-import nl.timesquared.timesquaredapp.Objects.ActivityObject;
-import nl.timesquared.timesquaredapp.Objects.ProjectObject;
-
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,17 +20,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    /*
-    Uitleg for Casper!
-    Things you can do:
-    -   Figure out how to make a persistent notification. In Android you often have to declare these things in files like android.manifest or some res file.
-        For example I had to make all menuItems in the res/menu folder. I will write the method you need to attach to it, as soon as you know where I have to put it.
-        Seems a bit odd to put it in an activity and have no idea where else.
-    -   Get the buttons in drawProjects and drawActivities to be the correct color. Right now they have a standard color. Both object types already have their colors inside them when
-        we call drawProjects or drawActivities. They're saved as integers though, and when I tried button.setBackgroundColor(project.getColor())); they became transparent. Good luck!
-     */
+import nl.timesquared.timesquaredapp.Database.getProjects;
+import nl.timesquared.timesquaredapp.Objects.ActivityLink;
+import nl.timesquared.timesquaredapp.Objects.ActivityObject;
+import nl.timesquared.timesquaredapp.Objects.ProjectObject;
 
+/**
+ * NOTE: Sopwafel and V.A. van den Broek are the same person on different computers because IDE configuration is hard.
+ */
+
+public class MainActivity extends AppCompatActivity {
     /**
      * List of Projects fetched from the server. Each project contains its  Activities and ActivityLinks
      */
@@ -120,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e)
         {
-            Log.d("getProjects", "error emssage in MainActivity.getProjects: "+e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -190,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
             Button button;
             // Only draw the projects if we know an UserID
             if (!savedUID.equals("unknown")) {
-                Log.d("userid: ", savedUID);
                 for (int i = 0; i < testList.size(); i++) {
                     final int j = i;
                     final ProjectObject project = testList.get(j);
@@ -237,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public Boolean isLastProject(ProjectObject p){
         String toCompare =p.getID();
-        Log.d("isLastProject", "Project in button: "+ p.getID()+" getString: "+localPrefs.getString("lastProject", "unknown"));
         return toCompare.equals(localPrefs.getString("lastProject", "unknown"));
     }
 
@@ -289,20 +278,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return builder;
-    }
-    /**
-     * Helper method that casts all items in a list to a different type
-     * @param srcList List
-     * @param clas Class
-     * @param <T> Type
-     * @return Converted list
-     */
-    public <T>List<T> castCollection(List srcList, Class<T> clas){
-        List<T> list =new ArrayList<T>();
-        for (Object obj : srcList) {
-            if(obj!=null && clas.isAssignableFrom(obj.getClass()))
-                list.add(clas.cast(obj));
-        }
-        return list;
     }
 }

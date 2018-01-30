@@ -1,8 +1,5 @@
 package nl.timesquared.timesquaredapp.Database;
 
-import android.app.Activity;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +9,7 @@ import nl.timesquared.timesquaredapp.Objects.ProjectObject;
 
 /**
  * Created by Sopwafel on 20-1-2018.
+ * Gets Projects and their activities and links from the server
  */
 
 public class getProjects extends JavaQL {
@@ -30,17 +28,16 @@ public class getProjects extends JavaQL {
     {
         String[] wat = { "Project_ID", "Project_Naam", "Project_Kleur", "Volgorde_Nummer", "Project_Actief", "UserID" };
         UID = params[0];
-        ArrayList<Object> output;
-        //ServerConnection();
-        output = Select(wat, "Projects", new String[]{"UserID"}, new String[]{UID}, "ProjectObject");
-
-        List<ProjectObject> projectList = castCollection(output, ProjectObject.class);
-
+        // This fetches Projects from the server
+        ArrayList<Object> objectList;
+        objectList = Select(wat, "Projects", new String[]{"UserID"}, new String[]{UID}, "ProjectObject");
+        List<ProjectObject> projectList = castCollection(objectList, ProjectObject.class);
+        // This gets the rest and puts it into the Projects for the rest of the app to access
         List<ActivityLink> activityLinks = getActivityLinks();
         List<ActivityObject> activities = getActivities();
-
         projectList = putLinksInProjects(projectList, activityLinks);
         projectList = putActivitiesInProjects(projectList, activities);
+
         return projectList;
     }
 
@@ -104,7 +101,6 @@ public class getProjects extends JavaQL {
     public List<ActivityObject> activitySelect(String[] kolommen_voorwaarden, String[] waarden_voorwaarden)
     {
         String[] wat = { "Activiteit_ID", "Activiteit", "kleur", "UserID" };
-        Log.d("Select", "We should be fetching all activities now");
         List<Object> objecten = Select(wat, "Activiteiten", kolommen_voorwaarden, waarden_voorwaarden, "Activity");
         List<ActivityObject> output = castCollection(objecten, ActivityObject.class);
         return output;
@@ -122,7 +118,6 @@ public class getProjects extends JavaQL {
     public List<ActivityLink> linkSelect(String[] kolommen_voorwaarden, String[] waarden_voorwaarden)
     {
         String[] wat = { "Project_ID", "Activiteit_ID", "Actief", "UserID"};
-        Log.d("Select", "We should be fetching all activityLinks now");
         List<Object> objecten = Select(wat, "Activity_Link", kolommen_voorwaarden, waarden_voorwaarden, "Activity_link");
         List<ActivityLink> output = castCollection(objecten, ActivityLink.class);
         return output;

@@ -1,7 +1,5 @@
 package nl.timesquared.timesquaredapp.Objects;
 
-import java.sql.Date;
-
 /**
  * Created by Sopwafel on 22-1-2018.
  */

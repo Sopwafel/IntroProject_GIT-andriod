@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,9 +22,12 @@ import nl.timesquared.timesquaredapp.Objects.ProjectObject;
 
 public class ActivitiesActivity extends AppCompatActivity {
     Notification notification;
+    /**
+     * This manages notifications
+     */
     NotificationManager notificationManager = null;
     /**
-     * In this thing we can save data
+     * In this thing we can save global app data
      */
     SharedPreferences localprefs;
     /**
@@ -37,13 +39,10 @@ public class ActivitiesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activities);
-        // Can't use a toolbar and actionbar at the same time.
-        // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // setSupportActionBar(toolbar);
 
         // This was really annoying. Intent is the link between an activity and its parent activity.
         // You can't just pass an object to the constructor of an activity because then it becomes null somehow.
-        // Finally most things have to be done after setcontentview or you get exceptions.
+        // Finally most things have to be done after setContentView or you get exceptions.
         final Intent passedIntent = getIntent();
         final ProjectObject project = (ProjectObject) passedIntent.getSerializableExtra("project");
         localprefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -133,8 +132,6 @@ public class ActivitiesActivity extends AppCompatActivity {
                                           @Override
                                           public void onClick(View view) {
                                               //When a button is clicked, start a timer for its activity
-                                              //TODO make it start a timer when that is fixed
-                                              //TODO CAPSER dit is de handler voor als we een timer starten. Hier kan je een notificatie starten.
                                               timerChange(finalLink);
                                               drawActivities(project);
                                           }
@@ -152,39 +149,45 @@ public class ActivitiesActivity extends AppCompatActivity {
     public void timerChange(ActivityLink link){
         if(isLastTimer(link))
         {
-            Log.d("timerChange", "isLastTimer = true");
             setLastLink(null);
             setLastProject(null);
+            // Making the button does all the important things.
             KnopDB knop = new KnopDB(localprefs.getLong("startTime", 0), savedUID, link, false );
             if(notificationManager!=(null))
                 notificationManager.cancelAll();
         }
         else{
-            Log.d("timerChange", "isLastTimer = false");
             String activityName = "";
             for(ActivityObject activityObject : thisProject.activityList) {
                 activityName = activityObject.getName();
                 if (activityObject.getID().equals(link.getActivityID()))
                     break;
             }
+            // These are necessary for button coloring
             setLastLink(link);
             setLastProject(thisProject);
+
+            // These put the timer in the server.
             final long starttime = System.currentTimeMillis();
             setStartTime(starttime);
+            // This is ugly but it works so why make it pretty. (Server functionality is in the constructor)
             KnopDB knop = new KnopDB(localprefs.getLong("startTime", 0), savedUID, link, true);
+
+
             // This makes a notification while the timer is running
+            // TODO put this in a notificationBundle in SharedPreferences so it doesn't get lost out of scope when closing the app BIG IMPORTANT IMPROVEMENT
             Notification.Builder builder = new Notification.Builder(getApplicationContext());
             builder.setContentTitle("TimeSquared");
             builder.setContentText("Currently running timer: "+activityName);
             builder.setOngoing(true);
             builder.setSmallIcon(R.drawable.ic_stat_name);
             // This is the click handler
-            // I'd love to open ActivitiesActivity but we can't make that without a Project supplied by MainActivity.
+            // I'd love to open ActivitiesActivity but that requires a ProjectObject supplied by MainActivity. So we're going with MainActivity.
             Intent notificationIntent = new Intent(this, MainActivity.class);
             PendingIntent notificationClick = PendingIntent.getActivity(this,0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(notificationClick);
             // And this finalizes/displays it.
-            notification = builder.build();    //TODO i was here
+            notification = builder.build();
             notificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(01, notification);

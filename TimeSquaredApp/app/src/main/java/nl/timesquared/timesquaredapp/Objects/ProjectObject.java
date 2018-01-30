@@ -1,16 +1,8 @@
 package nl.timesquared.timesquaredapp.Objects;
 
-import android.content.Context;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import nl.timesquared.timesquaredapp.ActivitiesActivity;
 
 /**
  * Created by Sopwafel on 18-1-2018.
@@ -73,8 +65,6 @@ public class ProjectObject extends NamedEntry{
     public void putActivityLink(ActivityLink aLink){
         if(aLink.getProjectID().equals(getID()))
             linkList.add(aLink);
-        else
-            Log.d("putActivity", "Link project ID: " + aLink.getProjectID()+", Project project ID: " +getID());
     }
 
     /**
