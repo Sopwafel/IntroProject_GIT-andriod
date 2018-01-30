@@ -14,6 +14,8 @@ import nl.timesquared.timesquaredapp.ActivitiesActivity;
 
 /**
  * Created by Sopwafel on 18-1-2018.
+ * A Project. Projects have Activities and ActivityLinks to link them. The project carries both.
+ * Activity is to display things, ActivityLink is necessary for in the server.
  */
 
 public class ProjectObject extends NamedEntry{
@@ -30,7 +32,8 @@ public class ProjectObject extends NamedEntry{
     }
 
     /**
-     * Finds the ActivityLink between the project and an ActivityObject
+     * Finds the ActivityLink between the project and an ActivityObject.
+     * Can return null so watch out!
      * @param activityToFindLinkOf
      * @return ActivityLink
      */
@@ -46,6 +49,12 @@ public class ProjectObject extends NamedEntry{
         return null;
     }
 
+    /**
+     * Returns an ActivityObject with the same ID as the given ActivityLink.
+     * Can return null so watch out!
+     * @param linkToFindActivityOf
+     * @return ActivityObject
+     */
     public ActivityObject getActivity(ActivityLink linkToFindActivityOf){
         ActivityObject output;
         for(int i = 0;i<activityList.size();i++)

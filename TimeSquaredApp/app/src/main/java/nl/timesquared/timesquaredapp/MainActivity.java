@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         // This makes sure the UserID is accessible
         localPrefs = this.getPreferences(Context.MODE_PRIVATE);
        // setUserID("d2c1b357-8041-4aef-9b41-da49db7a2aa6");
+        setUserID("398fb7b4-7a2e-47f9-9aa1-ae5f9939f1e4");
         savedUID = localPrefs.getString("USER_ID", "unknown");
         getProjects();
         drawProjects();

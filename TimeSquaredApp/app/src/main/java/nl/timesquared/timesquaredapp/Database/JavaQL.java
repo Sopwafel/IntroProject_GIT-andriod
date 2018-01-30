@@ -177,6 +177,12 @@ D/querryExecuter: failed:    INSERT INTO Timer_input (Begintijd, Eindtijd, Proje
 
      */
 
+    /**
+     * Sets session context of a connection.
+     * Apparently this is necessary
+     * @param conn
+     * @param UID UserID
+     */
     private void setSessionContext(Connection conn, String UID){
         try{
             stmt = conn.createStatement();
@@ -190,7 +196,6 @@ D/querryExecuter: failed:    INSERT INTO Timer_input (Begintijd, Eindtijd, Proje
 
     /**
      * Requests things from the database and returns them in a list
-     * TODO: dit afmaken
      * @param wat
      * @param tabel
      * @param tabellen_voorwaarden

@@ -7,6 +7,7 @@ import java.util.UUID;
  */
 
 public class ActivityLink extends Entry {
+
     private String ProjectID;
     public String getProjectID()
     {

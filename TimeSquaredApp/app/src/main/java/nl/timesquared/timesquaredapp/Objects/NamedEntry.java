@@ -10,6 +10,7 @@ import java.util.UUID;
 
 /**
  * Created by Sopwafel on 18-1-2018.
+ * Base class of all namedEntries(which is all non-timer entries. Basically everything you want to give a name to)
  */
 
 public abstract class NamedEntry extends Entry {

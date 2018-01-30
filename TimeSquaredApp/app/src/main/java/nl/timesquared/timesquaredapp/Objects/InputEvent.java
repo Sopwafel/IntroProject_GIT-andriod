@@ -4,6 +4,7 @@ import java.sql.Date;
 
 /**
  * Created by Sopwafel on 22-1-2018.
+ * Apparently we don't need this
  */
 
 public class InputEvent extends TimedEvent {

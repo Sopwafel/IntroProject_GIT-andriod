@@ -5,6 +5,7 @@ import java.util.UUID;
 
 /**
  * Created by Sopwafel on 18-1-2018.
+ * An activity. See ProjectObject
  */
 
 public class ActivityObject extends NamedEntry  {

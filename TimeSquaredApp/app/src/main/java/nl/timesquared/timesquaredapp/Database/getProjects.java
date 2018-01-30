@@ -15,8 +15,17 @@ import nl.timesquared.timesquaredapp.Objects.ProjectObject;
  */
 
 public class getProjects extends JavaQL {
-    ArrayList<Object> returnlist = new ArrayList<>();
+    /**
+     * UserID for talking to the server
+     */
     String UID;
+
+    /**
+     * Call like this: List<ProjectObject> list = new getProjects.execute();
+     * Gets data from the server in the background
+     * @param params String[0] should contain UserID
+     * @return List<ProjectObject>
+     */
     protected List<ProjectObject> doInBackground(String... params)
     {
         String[] wat = { "Project_ID", "Project_Naam", "Project_Kleur", "Volgorde_Nummer", "Project_Actief", "UserID" };
