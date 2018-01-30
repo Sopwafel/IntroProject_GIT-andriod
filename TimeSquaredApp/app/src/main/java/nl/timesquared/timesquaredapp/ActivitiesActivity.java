@@ -14,6 +14,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.concurrent.TimeUnit;
 
 import nl.timesquared.timesquaredapp.Database.KnopDB;
 import nl.timesquared.timesquaredapp.Objects.ActivityLink;
@@ -151,10 +154,20 @@ public class ActivitiesActivity extends AppCompatActivity {
         {
             setLastLink(null);
             setLastProject(null);
+            long starttime = localprefs.getLong("startTime", 0);
+            long totaltime = System.currentTimeMillis() - starttime;
             // Making the button does all the important things.
-            KnopDB knop = new KnopDB(localprefs.getLong("startTime", 0), savedUID, link, false );
+            KnopDB knop = new KnopDB(starttime, savedUID, link, false );
+            // TODO We need to get this from a bundle in sharedprefs so we don't lose it out of scope. Should make null check obsolete.
             if(notificationManager!=(null))
                 notificationManager.cancelAll();
+            // This bakes a toast that displays how long the timer had been turned on.
+            Toast toast = Toast.makeText(getApplicationContext(),"Time spent: "+ String.format("%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toMinutes(totaltime),
+                    TimeUnit.MILLISECONDS.toSeconds(totaltime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(totaltime))
+            ), Toast.LENGTH_SHORT );
+            toast.show();
         }
         else{
             String activityName = "";

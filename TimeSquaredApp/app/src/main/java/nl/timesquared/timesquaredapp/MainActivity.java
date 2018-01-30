@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void noProjectsAskUserID(){
         AlertDialog.Builder builder = baseAskUserID();
-        builder.setMessage("No projects were found. Please enter a valid UserID or create some projects on your computer");
+        builder.setMessage("No projects found. Make sure you enter a valid UserID and have projects associated with it.");
         builder.show();
     }
 
