@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,8 @@ import nl.timesquared.timesquaredapp.Objects.ActivityObject;
 import nl.timesquared.timesquaredapp.Objects.ProjectObject;
 
 public class ActivitiesActivity extends AppCompatActivity {
+    Notification notification;
+    NotificationManager notificationManager = null;
     /**
      * In this thing we can save data
      */
@@ -43,7 +46,7 @@ public class ActivitiesActivity extends AppCompatActivity {
         // Finally most things have to be done after setcontentview or you get exceptions.
         final Intent passedIntent = getIntent();
         final ProjectObject project = (ProjectObject) passedIntent.getSerializableExtra("project");
-        localprefs = this.getPreferences(Context.MODE_PRIVATE);
+        localprefs = PreferenceManager.getDefaultSharedPreferences(this);
         thisProject = project;
         drawActivities(project);
         savedUID = (String)passedIntent.getSerializableExtra("UID");
@@ -71,6 +74,17 @@ public class ActivitiesActivity extends AppCompatActivity {
         }
         else{
             editor.putString("lastLink", "placeholder so islastlink returns false");
+        }
+        editor.apply();
+    }
+
+    public void setLastProject(ProjectObject p){
+        SharedPreferences.Editor editor = localprefs.edit();
+        if(p!=null) {
+            editor.putString("lastProject", p.getID());
+        }
+        else{
+            editor.putString("lastLink", "placeholder so isLastProject returns false");
         }
         editor.apply();
     }
@@ -136,8 +150,10 @@ public class ActivitiesActivity extends AppCompatActivity {
         {
             Log.d("timerChange", "isLastTimer = true");
             setLastLink(null);
+            setLastProject(null);
             KnopDB knop = new KnopDB(localprefs.getLong("startTime", 0), savedUID, link, false );
-
+            if(notificationManager!=(null))
+                notificationManager.cancelAll();
         }
         else{
             Log.d("timerChange", "isLastTimer = false");
@@ -148,20 +164,27 @@ public class ActivitiesActivity extends AppCompatActivity {
                     break;
             }
             setLastLink(link);
+            setLastProject(thisProject);
             final long starttime = System.currentTimeMillis();
             setStartTime(starttime);
             KnopDB knop = new KnopDB(localprefs.getLong("startTime", 0), savedUID, link, true);
-            // This makes, big surprise, a notification while the timer is running
+            // This makes a notification while the timer is running
             Notification.Builder builder = new Notification.Builder(getApplicationContext());
             builder.setContentTitle("TimeSquared");
             builder.setContentText("Currently running timer: "+activityName);
             builder.setOngoing(true);
-            builder.setSmallIcon(R.drawabl);
-            Notification notification = builder.build();    //TODO i was here
-            NotificationManager notificationManager =
+            builder.setSmallIcon(R.drawable.ic_stat_name);
+            // This is the click handler
+            // I'd love to open ActivitiesActivity but we can't make that without a Project supplied by MainActivity.
+            Intent notificationIntent = new Intent(this, MainActivity.class);
+            PendingIntent notificationClick = PendingIntent.getActivity(this,0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(notificationClick);
+            // And this finalizes/displays it.
+            notification = builder.build();    //TODO i was here
+            notificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(01, notification);
-            Intent notificationIntent = new Intent(this, MainActivity.class);
+
         }
     }
     public ActivitiesActivity(){}

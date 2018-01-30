@@ -10,6 +10,8 @@ import nl.timesquared.timesquaredapp.Objects.ActivityObject;
 import nl.timesquared.timesquaredapp.Objects.ProjectObject;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -60,8 +62,9 @@ public class MainActivity extends AppCompatActivity {
 //        putToolbar();
 
         // This makes sure the UserID is accessible
-        localPrefs = this.getPreferences(Context.MODE_PRIVATE);
-       // setUserID("d2c1b357-8041-4aef-9b41-da49db7a2aa6");
+        localPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // setUserID("d2c1b357-8041-4aef-9b41-da49db7a2aa6");
         setUserID("398fb7b4-7a2e-47f9-9aa1-ae5f9939f1e4");
         savedUID = localPrefs.getString("USER_ID", "unknown");
         getProjects();
@@ -190,14 +193,17 @@ public class MainActivity extends AppCompatActivity {
             Log.d("userid: ", savedUID);
             for (int i = 0; i < testList.size(); i++) {
                 final int j = i;
+                final ProjectObject project = testList.get(j);
                 button = new Button(this);
+
+                if(isLastProject(project))
+                    button.setBackgroundColor(Color.RED);
                 button.setText(testList.get(i).getName());
                 //This is really annoying and should be much easier.
                 button.setOnClickListener(new View.OnClickListener() {
                                               @Override
                                               public void onClick(View view) {
                                                   //When a button is clicked, open an activitiesActivity with the corresponding project
-                                                  final ProjectObject project = testList.get(j);
                                                   startActivityIntent(project);
                                               }
                                           }
@@ -221,6 +227,17 @@ public class MainActivity extends AppCompatActivity {
         }
 //        putToolbar();
 
+    }
+
+    /**
+     * Checks if an Project is the currently active timer
+     * @param p ProjectObject
+     * @return Boolean
+     */
+    public Boolean isLastProject(ProjectObject p){
+        String toCompare =p.getID();
+        Log.d("isLastProject", "Project in button: "+ p.getID()+" getString: "+localPrefs.getString("lastProject", "unknown"));
+        return toCompare.equals(localPrefs.getString("lastProject", "unknown"));
     }
 
     /**
