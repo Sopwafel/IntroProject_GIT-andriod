@@ -60,12 +60,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        putToolbar();
+        // setUserID("d2c1b357-8041-4aef-9b41-da49db7a2aa6");
 
         // This makes sure the UserID is accessible
         localPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        // setUserID("d2c1b357-8041-4aef-9b41-da49db7a2aa6");
-        setUserID("398fb7b4-7a2e-47f9-9aa1-ae5f9939f1e4");
         savedUID = localPrefs.getString("USER_ID", "unknown");
         getProjects();
         drawProjects();
@@ -179,54 +178,56 @@ public class MainActivity extends AppCompatActivity {
      */
     public void drawProjects()
     {
-        // Getting UI element
-        LinearLayout projectHolder = (LinearLayout)findViewById(R.id.projectHolder);
-        projectHolder.removeAllViews();
+        if(testList.size()!=0) {
+            // Getting UI element
+            LinearLayout projectHolder = (LinearLayout) findViewById(R.id.projectHolder);
+            projectHolder.removeAllViews();
 
-        TextView text = new TextView(this);
-        text.setText("Select a project");
-        projectHolder.addView(text);
+            TextView text = new TextView(this);
+            text.setText("Select a project");
+            projectHolder.addView(text);
 
-        Button button;
-        // Only draw the projects if we know an UserID
-        if(!savedUID.equals("unknown")) {
-            Log.d("userid: ", savedUID);
-            for (int i = 0; i < testList.size(); i++) {
-                final int j = i;
-                final ProjectObject project = testList.get(j);
-                button = new Button(this);
+            Button button;
+            // Only draw the projects if we know an UserID
+            if (!savedUID.equals("unknown")) {
+                Log.d("userid: ", savedUID);
+                for (int i = 0; i < testList.size(); i++) {
+                    final int j = i;
+                    final ProjectObject project = testList.get(j);
+                    button = new Button(this);
 
-                if(isLastProject(project))
-                    button.setBackgroundColor(Color.RED);
-                button.setText(testList.get(i).getName());
-                //This is really annoying and should be much easier.
-                button.setOnClickListener(new View.OnClickListener() {
-                                              @Override
-                                              public void onClick(View view) {
-                                                  //When a button is clicked, open an activitiesActivity with the corresponding project
-                                                  startActivityIntent(project);
+                    if (isLastProject(project))
+                        button.setBackgroundColor(Color.RED);
+                    button.setText(testList.get(i).getName());
+                    //This is really annoying and should be much easier.
+                    button.setOnClickListener(new View.OnClickListener() {
+                                                  @Override
+                                                  public void onClick(View view) {
+                                                      //When a button is clicked, open an activitiesActivity with the corresponding project
+                                                      startActivityIntent(project);
+                                                  }
                                               }
-                                          }
-                );
+                    );
+                    projectHolder.addView(button);
+                }
+            }
+            // If we don't know UserID, ask for it
+            else {
+                //All this block does is ask the user to enter their userID
+                button = new Button(this);
+                button.setText("Enter useID");
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        askUserID();
+                    }
+                });
                 projectHolder.addView(button);
             }
-        }
-        // If we don't know UserID, ask for it
-        else
-        {
-            //All this block does is ask the user to enter their userID
-            button = new Button(this);
-            button.setText("Enter useID");
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    askUserID();
-                }
-            });
-            projectHolder.addView(button);
-        }
 //        putToolbar();
-
+        }
+        else
+            noProjectsAskUserID();
     }
 
     /**
@@ -244,10 +245,29 @@ public class MainActivity extends AppCompatActivity {
      * Shows a dialog that asks for userID and saves it.
      */
     private void askUserID(){
+
+        AlertDialog.Builder builder = baseAskUserID();
+        builder.setMessage("Please enter the UserID you use on the desktop app:");
+        builder.show();
+    }
+
+    /**
+     * Slightly different dialog that is shown when we can't retrieve any projects
+     */
+    private void noProjectsAskUserID(){
+        AlertDialog.Builder builder = baseAskUserID();
+        builder.setMessage("No projects were found. Please enter a valid UserID or create some projects on your computer");
+        builder.show();
+    }
+
+    /**
+     * We want to be able to show different but similar dialogs for asking userID
+     * @return
+     */
+    private AlertDialog.Builder baseAskUserID(){
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("UserID");
         // Set up the input
-        builder.setMessage("Please enter the ID you use on the desktop app:");
         final EditText input = new EditText(MainActivity.this);
         // Specify the type of input expected
         input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -258,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 setUserID(input.getText().toString());
+                getProjects();
                 drawProjects();
             }
         });
@@ -267,9 +288,8 @@ public class MainActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
-        builder.show();
+        return builder;
     }
-
     /**
      * Helper method that casts all items in a list to a different type
      * @param srcList List

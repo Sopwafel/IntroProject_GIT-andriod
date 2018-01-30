@@ -78,13 +78,17 @@ public class ActivitiesActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    /**
+     * Saves the projectID of the active timer so we can color the correct button red in MainActivity
+     * @param p project
+     */
     public void setLastProject(ProjectObject p){
         SharedPreferences.Editor editor = localprefs.edit();
         if(p!=null) {
             editor.putString("lastProject", p.getID());
         }
         else{
-            editor.putString("lastLink", "placeholder so isLastProject returns false");
+            editor.putString("lastProject", "placeholder so isLastProject returns false");
         }
         editor.apply();
     }
