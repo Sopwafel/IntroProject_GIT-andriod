@@ -1,1 +1,1 @@
-include ':app', ':mssql-jdbc-6.2.2.jre8', ':jtds-1.2.7', ':jtds-1.2.8'
+include ':app', ':mssql-jdbc-6.2.2.jre8', ':jtds-1.2.8'
